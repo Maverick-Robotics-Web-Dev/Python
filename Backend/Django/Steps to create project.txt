@@ -1,0 +1,20 @@
+1.- Create virtual enviroment
+virltualenv (name of virtualenv)
+python -m virtualenv (name of virtualenv)
+
+2.- If you already have setuptools installed do not run this command otherwise run the following command
+pip install setuptools
+
+3.- Install Packages
+pip install Django
+pip install djangorestframework
+pip install coreapi
+pip install drf-yasg
+pip install django-cors-headers
+pip install djangorestframework-simplejwt
+pip install pillow
+pip install mysqlclient
+pip install Unipath
+
+3.- Create Django Project run the following command
+django-admin startproject (project name) (project path)
