@@ -18,3 +18,20 @@ pip install Unipath
 
 3.- Create Django Project run the following command
 django-admin startproject (project name) (project path)
+
+4.- Create the environment variables file with .json extension with the following variables
+{
+  "FILENAME": "core_env.json",
+  "SECRET_KEY":,
+  "DB_HOST": ,
+  "DB_PORT": ,
+  "DB_USER": ,
+  "DB_PW": ,
+  "DB_NAME":
+}
+
+5.- Modify the settings.py file
+
+6.- Create the local.py file
+
+7.- Modify the manage.py asgi.py and wsgi.py file

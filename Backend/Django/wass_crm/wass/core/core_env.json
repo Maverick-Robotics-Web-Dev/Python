@@ -1,0 +1,9 @@
+{
+  "FILENAME": "core_env.json",
+  "SECRET_KEY": "django-insecure-vq7kf(&%sjouqb_=h52e(ra!0_pk!pssz#n+c$73is(we#s8kr",
+  "DB_HOST": "localhost",
+  "DB_PORT": "3306",
+  "DB_USER": "root",
+  "DB_PW": "Wilmar2024",
+  "DB_NAME": "wass_crm"
+}
