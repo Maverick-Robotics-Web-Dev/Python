@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from unipath import Path
 from locale import setlocale, LC_ALL
 
-from tools.methods_core import get_env_file
+from tools.methods.core import get_env_file
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).ancestor(2)
@@ -48,8 +48,8 @@ LOCAL_APPS = []
 THIRD_APPS = [
     # 'django_filters',
     'rest_framework',
-    # 'rest_framework_simplejwt.token_blacklist',  # To revoke tokens
-    # 'rest_framework_simplejwt',  # Rest with jwt
+    'rest_framework_simplejwt.token_blacklist',   # To revoke tokens
+    'rest_framework_simplejwt',  # Rest with jwt
     'coreapi',  # To document the application
     'drf_yasg',  # To document the application
     'corsheaders'  # To add cors in the header

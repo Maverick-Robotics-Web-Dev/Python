@@ -1,0 +1,25 @@
+1.- Create a Virtual Enviroment for development with the next cmd
+
+python -m virtualenv (name of the enviroment)
+
+2.-To activate the Virtual Enviroment use this cmd
+
+Linux: ./(name of folder of the virtual enviroment)/Scripts/activate
+Windows: .\(name of folder of the virtual enviroment)\Scripts\activate
+
+3.-Install Django Framework with the next cmd
+
+pip install django
+
+4.- Install Django Rest Framework the next cmd
+
+pip install djangorestframework
+
+5.- To Create a Django Project use the next cmd
+
+django-admin startproject (prpject name) optional:(project path)
+
+6.- To Create a app use the next cmd
+
+django-admin startapp (app name)
+python manage.py startapp (app name)
