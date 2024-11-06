@@ -8,7 +8,7 @@ from models.abstract.nested import NestedModel
 class BranchOfficesModel(NestedModel):
 
     id: AutoField = AutoField('ID', primary_key=True)
-    name: CharField = CharField('Nombre', max_length=500)
+    name: CharField = CharField('Nombre', unique=True, max_length=250)
     country: CharField = CharField('Pais', max_length=200)
     state_province: CharField = CharField('Provincia o Estado', max_length=200)
     city: CharField = CharField('Ciudad', max_length=200)
@@ -18,7 +18,7 @@ class BranchOfficesModel(NestedModel):
     phone_number: CharField = CharField('Telefono', max_length=50, default='Sin Telefono Convencional')
     email: CharField = CharField('E-mail', max_length=100, default='No Posee email')
     img: ImageField = ImageField('Imagen', upload_to='persons/', blank=True, null=True)
-    fk_user_employee: ForeignKey = ForeignKey('user_employee.UserEmployeeModel', on_delete=CASCADE, verbose_name='Usuario')
+    # fk_user_employee: ForeignKey = ForeignKey('user_employee.UserEmployeeModel', on_delete=CASCADE, verbose_name='Usuario')
 
     class Meta:
 
