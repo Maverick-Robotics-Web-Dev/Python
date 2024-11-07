@@ -1,3 +1,4 @@
+from multiprocessing.managers import BaseManager
 from typing import Self
 from collections import OrderedDict
 
@@ -47,9 +48,9 @@ class BranchOfficesViewSet(OwnCustomViewSet):
                 'msg': 'No existen coincidencias'
             }
 
-            response_error: ValidationError = ValidationError(data, HTTP_204_NO_CONTENT)
+            response: ValidationError = ValidationError(data, HTTP_204_NO_CONTENT)
 
-            raise response_error
+            raise response
 
     def get_queryset(self: Self) -> QuerySet:
 
@@ -104,6 +105,19 @@ class BranchOfficesViewSet(OwnCustomViewSet):
     def create(self: Self, request: Request):
 
         req_data: OrderedDict = request.data
+
+        if 'name' in req_data.keys():
+            names = self.model.objects.values_list('name', flat=True)
+            search: str = req_data.get('name')
+
+            if search in names:
+                data: OrderedDict = {
+                    'error': 'ERROR',
+                    'msg': 'El nombre de la sucursal ya existe'
+                }
+                response: Response = Response(data, HTTP_400_BAD_REQUEST)
+                return response
+
         serializer: ModelSerializer = self.get_serializer(data=req_data)
 
         if serializer.is_valid():
@@ -114,7 +128,6 @@ class BranchOfficesViewSet(OwnCustomViewSet):
                 'data': serializer.data
             }
             response: Response = Response(data, HTTP_201_CREATED)
-
             return response
 
         data: OrderedDict = {
@@ -122,7 +135,6 @@ class BranchOfficesViewSet(OwnCustomViewSet):
             'msg': serializer.errors
         }
         response: Response = Response(data, HTTP_400_BAD_REQUEST)
-
         return response
 
     def partial_update(self: Self, request: Request, pk: str = None):

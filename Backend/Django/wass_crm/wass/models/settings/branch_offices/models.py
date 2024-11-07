@@ -8,7 +8,7 @@ from models.abstract.nested import NestedModel
 class BranchOfficesModel(NestedModel):
 
     id: AutoField = AutoField('ID', primary_key=True)
-    name: CharField = CharField('Nombre', unique=True, max_length=250)
+    name: CharField = CharField('Nombre', max_length=500)
     country: CharField = CharField('Pais', max_length=200)
     state_province: CharField = CharField('Provincia o Estado', max_length=200)
     city: CharField = CharField('Ciudad', max_length=200)
