@@ -141,6 +141,19 @@ class BranchOfficesViewSet(OwnCustomViewSet):
 
         req_data: OrderedDict = request.data
         obj: Model = self.get_object(pk)
+
+        if 'name' in req_data.keys():
+            names = self.model.objects.values_list('name', flat=True)
+            search: str = req_data.get('name')
+
+            if (search in names) and (str(obj.id) != pk):
+                data: OrderedDict = {
+                    'error': 'ERROR',
+                    'msg': 'El nombre de la sucursal ya existe'
+                }
+                response: Response = Response(data, HTTP_400_BAD_REQUEST)
+                return response
+        
         serializer: ModelSerializer = self.get_serializer(obj, data=req_data, partial=True)
 
         if serializer.is_valid():
