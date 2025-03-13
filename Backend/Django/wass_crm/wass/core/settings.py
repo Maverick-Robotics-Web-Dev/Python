@@ -169,9 +169,12 @@ REST_FRAMEWORK = {
     'DATE_FORMAT': '%B %d, %Y',
     'DATE_INPUT_FORMATS': ['%B %d, %Y', '%d-%m-%Y'],
     'TIME_FORMAT': '%H:%M:%S',
-    'TIME_INPUT_FORMATS': ['%H:%M:%S']
+    'TIME_INPUT_FORMATS': ['%H:%M:%S'],
     # The default permission policy may be set globally
     # 'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']
+    'DEFAULT_PAGINATION_CLASS': 'tools.methods.pagination.Custom_Pagination',
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 5
 
 }
 
