@@ -60,7 +60,7 @@ class BranchOfficesViewSet(OwnCustomViewSet):
         query_res = self.queryset
 
         if query_res is None:
-            response: Model = mdl.objects.filter(status=True)
+            response: Model = mdl.objects.filter(status=True).order_by('name')
 
             return response
 
@@ -71,11 +71,12 @@ class BranchOfficesViewSet(OwnCustomViewSet):
         query_res: QuerySet = self.get_queryset()
         serializer: ModelSerializer = self.get_serializer(query_res, many=True)
         page = self.paginate_queryset(query_res)
-
-        # if page is not None:
-        #     serializer2 = self.get_serializer(page, many=True)
-        #     print(self.get_paginated_response(serializer2.data))
-        #     return self.get_paginated_response(serializer.data)
+        if page is not None:
+            serializer2 = self.get_serializer(page, many=True)
+            pagination=self.get_paginated_response(serializer2.data)
+            # print(pagination['next'])
+            print(pagination)
+            # return self.get_paginated_response(serializer2.data)
         if not query_res:
             data: OrderedDict = {
                 'ok': 'OK',
@@ -88,7 +89,7 @@ class BranchOfficesViewSet(OwnCustomViewSet):
 
         data: OrderedDict = {
             'ok': 'OK',
-            'data': serializer.data
+            'data': serializer.data,
         }
 
         response: Response = Response(data, HTTP_200_OK)

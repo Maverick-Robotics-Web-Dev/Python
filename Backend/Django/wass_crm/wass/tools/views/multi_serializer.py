@@ -2,7 +2,7 @@ from typing import Self
 from collections import OrderedDict
 
 from rest_framework.viewsets import GenericViewSet
-
+from rest_framework.pagination import PageNumberPagination
 
 class OwnCustomViewSet(GenericViewSet):
 
