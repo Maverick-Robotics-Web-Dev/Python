@@ -1,0 +1,5 @@
+https://stackoverflow-com.translate.goog/questions/31785966/django-rest-framework-turn-on-pagination-on-a-viewset-like-modelviewset-pagina?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=tc
+
+https://github-com.translate.goog/encode/django-rest-framework/blob/master/rest_framework/mixins.py?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=tc#L35
+
+https://www-horilla-com.translate.goog/blogs/how-to-setup-pagination-in-drf-django-rest-framework/?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=es&_x_tr_pto=tc

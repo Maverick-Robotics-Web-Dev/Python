@@ -1,4 +1,3 @@
-from multiprocessing.managers import BaseManager
 from typing import Self
 from collections import OrderedDict
 
@@ -6,7 +5,6 @@ from django.db.models import Model
 from django.db.models.query import QuerySet
 
 from rest_framework.serializers import ModelSerializer
-from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
@@ -19,7 +17,6 @@ from rest_framework.status import (
 
 from models.settings.branch_offices.models import BranchOfficesModel
 from models.settings.branch_offices.serializers import BranchOfficesSerializer
-from tools.methods.pagination import Custom_Pagination
 from tools.views.multi_serializer import OwnCustomViewSet
 
 
@@ -69,14 +66,12 @@ class BranchOfficesViewSet(OwnCustomViewSet):
     def list(self: Self, request: Request) -> Response:
 
         query_res: QuerySet = self.get_queryset()
-        serializer: ModelSerializer = self.get_serializer(query_res, many=True)
         page = self.paginate_queryset(query_res)
+
         if page is not None:
-            serializer2 = self.get_serializer(page, many=True)
-            pagination=self.get_paginated_response(serializer2.data)
-            # print(pagination['next'])
-            print(pagination)
-            # return self.get_paginated_response(serializer2.data)
+            serializer: ModelSerializer = self.get_serializer(page, many=True)
+            pagination: dict = self.get_paginated_response(serializer.data)
+
         if not query_res:
             data: OrderedDict = {
                 'ok': 'OK',
@@ -89,7 +84,10 @@ class BranchOfficesViewSet(OwnCustomViewSet):
 
         data: OrderedDict = {
             'ok': 'OK',
-            'data': serializer.data,
+            'next': pagination['next'],
+            'previous': pagination['previous'],
+            'count': pagination['count'],
+            'data': pagination['results'],
         }
 
         response: Response = Response(data, HTTP_200_OK)
