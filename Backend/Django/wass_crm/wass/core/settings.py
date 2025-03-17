@@ -173,8 +173,6 @@ REST_FRAMEWORK = {
     # The default permission policy may be set globally
     # 'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']
     # 'DEFAULT_PAGINATION_CLASS': 'tools.methods.pagination.Custom_Pagination',
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     # 'PAGE_SIZE': 5
 
 }

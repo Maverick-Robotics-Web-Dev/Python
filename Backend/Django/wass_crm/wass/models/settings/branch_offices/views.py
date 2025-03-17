@@ -53,10 +53,10 @@ class BranchOfficesViewSet(OwnCustomViewSet):
 
     def get_queryset(self: Self) -> QuerySet:
 
-        mdl: Model = self.model
         query_res = self.queryset
 
         if query_res is None:
+            mdl: Model = self.model
             response: Model = mdl.objects.filter(status=True).order_by('name')
 
             return response
@@ -66,28 +66,39 @@ class BranchOfficesViewSet(OwnCustomViewSet):
     def list(self: Self, request: Request) -> Response:
 
         query_res: QuerySet = self.get_queryset()
-        page = self.paginate_queryset(query_res)
-
-        if page is not None:
-            serializer: ModelSerializer = self.get_serializer(page, many=True)
-            pagination: dict = self.get_paginated_response(serializer.data)
 
         if not query_res:
             data: OrderedDict = {
                 'ok': 'OK',
                 'msg': 'No existen datos',
-                'data': serializer.data,
             }
             response: Response = Response(data, HTTP_200_OK)
 
             return response
+        
+        query_page = self.paginate_queryset(query_res)
 
-        data: OrderedDict = {
+        if query_page is not None:
+            serializer: ModelSerializer = self.get_serializer(query_page, many=True)
+            pagination: OrderedDict = self.get_paginated_response(serializer.data)
+
+            data: OrderedDict = {
             'ok': 'OK',
             'next': pagination['next'],
             'previous': pagination['previous'],
             'count': pagination['count'],
             'data': pagination['results'],
+            }
+            
+            response: Response = Response(data, HTTP_200_OK)
+
+            return response
+        
+        serializer: ModelSerializer = self.get_serializer(query_res, many=True)
+
+        data: OrderedDict = {
+            'ok': 'OK',
+            'data': serializer.data,
         }
 
         response: Response = Response(data, HTTP_200_OK)
