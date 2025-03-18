@@ -87,6 +87,7 @@ class BranchOfficesViewSet(OwnCustomViewSet):
             'next': pagination['next'],
             'previous': pagination['previous'],
             'count': pagination['count'],
+            'pages': pagination['pages'],
             'data': pagination['results'],
             }
             
