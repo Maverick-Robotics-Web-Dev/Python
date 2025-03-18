@@ -8,6 +8,7 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
+from rest_framework.decorators import action
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
@@ -75,26 +76,7 @@ class BranchOfficesViewSet(OwnCustomViewSet):
             response: Response = Response(data, HTTP_200_OK)
 
             return response
-        
-        query_page = self.paginate_queryset(query_res)
 
-        if query_page is not None:
-            serializer: ModelSerializer = self.get_serializer(query_page, many=True)
-            pagination: OrderedDict = self.get_paginated_response(serializer.data)
-
-            data: OrderedDict = {
-            'ok': 'OK',
-            'next': pagination['next'],
-            'previous': pagination['previous'],
-            'count': pagination['count'],
-            'pages': pagination['pages'],
-            'data': pagination['results'],
-            }
-            
-            response: Response = Response(data, HTTP_200_OK)
-
-            return response
-        
         serializer: ModelSerializer = self.get_serializer(query_res, many=True)
 
         data: OrderedDict = {
@@ -214,5 +196,50 @@ class BranchOfficesViewSet(OwnCustomViewSet):
             'msg': serializer.errors
         }
         response = Response(data, HTTP_400_BAD_REQUEST)
+
+        return response
+
+    @action(methods=['get'], detail=False)
+    def list_pagination(self: Self, request: Request) -> Response:
+
+        query_res: QuerySet = self.get_queryset()
+
+        if not query_res:
+            data: OrderedDict = {
+                'ok': 'OK',
+                'msg': 'No existen datos',
+            }
+            response: Response = Response(data, HTTP_200_OK)
+
+            return response
+
+        query_page = self.paginate_queryset(query_res)
+
+        if query_page is not None:
+            serializer: ModelSerializer = self.get_serializer(query_page, many=True)
+            pagination: OrderedDict = self.get_paginated_response(serializer.data)
+
+            data: OrderedDict = {
+                'ok': 'OK',
+                'next': pagination['next'],
+                'previous': pagination['previous'],
+                'count': pagination['count'],
+                'pages': pagination['pages'],
+                'current': pagination['current'],
+                'data': pagination['results'],
+            }
+
+            response: Response = Response(data, HTTP_200_OK)
+
+            return response
+
+        serializer: ModelSerializer = self.get_serializer(query_res, many=True)
+
+        data: OrderedDict = {
+            'ok': 'OK',
+            'data': serializer.data,
+        }
+
+        response: Response = Response(data, HTTP_200_OK)
 
         return response
