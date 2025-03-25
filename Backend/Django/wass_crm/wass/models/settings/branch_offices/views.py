@@ -202,8 +202,6 @@ class BranchOfficesViewSet(OwnCustomViewSet):
     @action(methods=['get'], detail=False)
     def list_pagination(self: Self, request: Request) -> Response:
 
-        print(request.query_params)
-
         query_res: QuerySet = self.get_queryset()
 
         if not query_res:

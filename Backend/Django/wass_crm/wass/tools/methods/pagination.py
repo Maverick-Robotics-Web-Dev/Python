@@ -1,4 +1,5 @@
 from typing import Any
+from typing import Self
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.mixins import ListModelMixin
@@ -10,6 +11,7 @@ class Custom_Pagination(PageNumberPagination):
     max_page_size = 100
 
     def get_paginated_response(self, data) -> dict[str, Any]:
+        
         return {
             'next': self.get_next_link(),
             'previous': self.get_previous_link(),
@@ -18,3 +20,4 @@ class Custom_Pagination(PageNumberPagination):
             'current': self.page.number,
             'results': data
         }
+    
