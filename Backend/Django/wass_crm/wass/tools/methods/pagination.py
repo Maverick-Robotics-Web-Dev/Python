@@ -11,13 +11,13 @@ class Custom_Pagination(PageNumberPagination):
     max_page_size = 100
 
     def get_paginated_response(self, data) -> dict[str, Any]:
-        
+
         return {
             'next': self.get_next_link(),
             'previous': self.get_previous_link(),
             'count': self.page.paginator.count,
             'pages': self.page.paginator.num_pages,
             'current': self.page.number,
+            'last': self.last_page_strings,
             'results': data
         }
-    
