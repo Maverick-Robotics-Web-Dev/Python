@@ -17,7 +17,7 @@ class BranchOfficesModel(NestedModel):
     cellphone_number: CharField = CharField('Celular', max_length=50)
     phone_number: CharField = CharField('Telefono', max_length=50, default='Sin Telefono Convencional')
     email: CharField = CharField('E-mail', max_length=100, default='No Posee email')
-    img: ImageField = ImageField('Imagen', upload_to='branchoffices/', blank=True, null=True)
+    img: ImageField = ImageField('Imagen', upload_to='branchoffices/', default='default.jpg')
     # fk_user_employee: ForeignKey = ForeignKey('user_employee.UserEmployeeModel', on_delete=CASCADE, verbose_name='Usuario')
 
     class Meta:
