@@ -105,6 +105,8 @@ class BranchOfficesViewSet(OwnCustomViewSet):
     def create(self: Self, request: Request):
 
         req_data: OrderedDict = request.data
+        print(type(req_data.get('img')))
+        print(req_data.get('img'))
 
         if 'name' in req_data.keys():
             names = self.model.objects.values_list('name', flat=True)
