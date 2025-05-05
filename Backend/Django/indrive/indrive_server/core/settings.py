@@ -43,13 +43,18 @@ BASE_APPS = [
     'django.contrib.staticfiles',
 ]
 
-LOCAL_APPS=[]
+LOCAL_APPS = ['models.users']
 
-THIRD_APPS=[]
+THIRD_APPS = [
+    'rest_framework',
+    'drf_yasg',  # To document the application
+    'corsheaders'
+]
 
-INSTALLED_APPS= BASE_APPS + LOCAL_APPS + THIRD_APPS
+INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_APPS
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -133,3 +138,12 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:4200",
 ]
+
+REST_FRAMEWORK = {
+    'DATETIME_FORMAT': '%B %d, %Y - %H:%M:%S',
+    'DATETIME_INPUT_FORMATS': ['%B %d, %Y - %H:%M:%S', '%d-%m-%Y - %H:%M:%S'],
+    'DATE_FORMAT': '%B %d, %Y',
+    'DATE_INPUT_FORMATS': ['%B %d, %Y', '%d-%m-%Y'],
+    'TIME_FORMAT': '%H:%M:%S',
+    'TIME_INPUT_FORMATS': ['%H:%M:%S'],
+}

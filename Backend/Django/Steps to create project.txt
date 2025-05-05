@@ -8,7 +8,6 @@ pip install setuptools
 3.- Install Packages
 pip install Django
 pip install djangorestframework
-pip install coreapi
 pip install drf-yasg
 pip install django-cors-headers
 pip install djangorestframework-simplejwt
