@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('', include('docs.urls'), name='docs'),
-    path('admin/', admin.site.urls),
+    path(route='', view=include('docs.urls'), name='docs'),
+    path(route='admin/', view=admin.site.urls, name='admin'),
+    path(route='indrive/api/v1/', view=include(arg='routes.urls'), name='routes')
 ]

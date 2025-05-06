@@ -4,7 +4,7 @@ from django.db.models import (AutoField, CharField, EmailField)
 from models.abstract.nested_model import NestedModel
 
 
-class User(NestedModel):
+class UserModel(NestedModel):
     id: AutoField = AutoField(verbose_name='ID', primary_key=True)
     name: CharField = CharField(verbose_name='Nombre', max_length=256)
     lastname: CharField = CharField(verbose_name='Apellido', max_length=256)
@@ -22,6 +22,6 @@ class User(NestedModel):
 
     def __str__(self: Self) -> LiteralString:
 
-        mdl_attr: str = str(self.name)
+        mdl_attr: str = str(object=self.name)
 
         return mdl_attr

@@ -1,14 +1,12 @@
 from typing import Self
 from collections import OrderedDict
+
 from rest_framework.viewsets import GenericViewSet
-from tools.methods.pagination import Custom_Pagination
 
 
-class OwnCustomViewSet(GenericViewSet):
-
+class CustomViewSet(GenericViewSet):
     action: str = ''
     serializers: OrderedDict = {"default": None}
-    pagination_class = Custom_Pagination
 
     def get_serializer_class(self: Self):
         """
