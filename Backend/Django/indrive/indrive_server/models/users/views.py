@@ -89,8 +89,8 @@ class UserViewSet(CustomViewSet):
 
     def retrieve(self: Self, request: Request, pk: str = None):
 
-        obj: Model = self.get_object(pk)
-        serializer: ModelSerializer = self.get_serializer(obj)
+        mdl: Model = self.get_object(pk)
+        serializer: ModelSerializer = self.get_serializer(mdl)
 
         data: OrderedDict = {
             'ok': 'OK',
@@ -139,13 +139,13 @@ class UserViewSet(CustomViewSet):
     def partial_update(self: Self, request: Request, pk: str = None):
 
         req_data: OrderedDict = request.data
-        obj: Model = self.get_object(pk)
+        mdl: Model = self.get_object(pk)
 
         if 'name' in req_data.keys():
             names = self.model.objects.values_list('name', flat=True)
             search: str = req_data.get('name')
 
-            if (search in names) and (str(obj.id) != pk):
+            if (search in names) and (str(mdl.id) != pk):
                 data: OrderedDict = {
                     'error': 'ERROR',
                     'msg': 'El nombre de la sucursal ya existe'
@@ -153,7 +153,7 @@ class UserViewSet(CustomViewSet):
                 response: Response = Response(data, HTTP_400_BAD_REQUEST)
                 return response
 
-        serializer: ModelSerializer = self.get_serializer(obj, data=req_data, partial=True)
+        serializer: ModelSerializer = self.get_serializer(mdl, data=req_data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
@@ -177,8 +177,8 @@ class UserViewSet(CustomViewSet):
     def destroy(self: Self, request: Request, pk: str = None):
 
         req_data: OrderedDict = request.data
-        obj: Model = self.get_object(pk)
-        serializer: ModelSerializer = self.get_serializer(obj, data=req_data, partial=True)
+        mdl: Model = self.get_object(pk)
+        serializer: ModelSerializer = self.get_serializer(mdl, data=req_data, partial=True)
 
         if serializer.is_valid():
             serializer.save(flag=True)
@@ -190,10 +190,28 @@ class UserViewSet(CustomViewSet):
 
             return response
 
-        self.data = {
+        data = {
             'error': 'ERROR',
             'msg': serializer.errors
         }
         response = Response(data, HTTP_400_BAD_REQUEST)
 
         return response
+
+    @action(methods=['POST'], detail=False)
+    def login(self: Self, request: Request):
+        email: str = request.data.get('email')
+        password: str = request.data.get('password')
+
+        if not email or not password:
+            data = {
+                'error': 'ERROR',
+                'msg': 'El email y password son obligatorios'
+            }
+            response: Response = Response(data=data, status=HTTP_400_BAD_REQUEST)
+
+            return response
+
+        try:
+            user = self.model.objects.get(email=email, status=True)
+        except

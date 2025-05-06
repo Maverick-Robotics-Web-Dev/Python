@@ -6,8 +6,11 @@ from django.db.models import Model
 from rest_framework.serializers import (ModelSerializer, raise_errors_on_nested_writes)
 from rest_framework.utils import model_meta
 
+from tools.methods.datetime import local_datetime
+from tools.methods.encrypt_data import encrypt_data
 
-class CustomModelSerializer(ModelSerializer):
+
+class ModelCustomSerializer(ModelSerializer):
 
     def get_model(self: Self) -> Model:
         model: Model = self.Meta.model
@@ -15,13 +18,16 @@ class CustomModelSerializer(ModelSerializer):
 
     def create(self: Self, validated_data: OrderedDict) -> Model:
         model: Model = self.get_model()
-        validated_data.update({'status': True})
+        encode_password = validated_data.pop('password')
+        hashed_password: str = encrypt_data(encode_password)
+        validated_data.update({'password': hashed_password, 'status': True, 'create_at': local_datetime()})
         raise_errors_on_nested_writes('create', self, validated_data)
         instance: Model = model._default_manager.create(**validated_data)
 
         return instance
 
     def update(self: Self, instance: Model, validated_data: OrderedDict) -> Model:
+        validated_data.update({'update_at': local_datetime()})
         raise_errors_on_nested_writes('update', self, validated_data)
         info = model_meta.get_field_info(instance)
         m2m_fields = []
@@ -41,7 +47,7 @@ class CustomModelSerializer(ModelSerializer):
         return instance
 
     def delete(self: Self, instance: Model, validated_data: OrderedDict) -> Model:
-        validated_data.update({'status': False})
+        validated_data.update({'status': False, 'update_at': local_datetime()})
         raise_errors_on_nested_writes('delete', self, validated_data)
 
         for attr, value in validated_data.items():
