@@ -100,58 +100,32 @@ class UserViewSet(CustomViewSet):
 
         return response
 
-    def create(self: Self, request: Request):
+    # def create(self: Self, request: Request):
 
-        req_data: OrderedDict = request.data
+    #     req_data: OrderedDict = request.data
+    #     serializer: ModelSerializer = self.get_serializer(data=req_data)
 
-        if 'name' in req_data.keys():
-            names = self.model.objects.values_list('name', flat=True)
-            search: str = req_data.get('name')
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         data: OrderedDict = {
+    #             'ok': 'OK',
+    #             'msg': 'Creado Exitosamente',
+    #             'data': serializer.data
+    #         }
+    #         response: Response = Response(data=data, status=HTTP_201_CREATED)
+    #         return response
 
-            if search in names:
-                data: OrderedDict = {
-                    'error': 'ERROR',
-                    'msg': 'El nombre de la sucursal ya existe'
-                }
-                response: Response = Response(data, HTTP_400_BAD_REQUEST)
-                return response
-
-        serializer: ModelSerializer = self.get_serializer(data=req_data)
-
-        if serializer.is_valid():
-            serializer.save()
-            data: OrderedDict = {
-                'ok': 'OK',
-                'msg': 'Creado Exitosamente',
-                'data': serializer.data
-            }
-            response: Response = Response(data=data, status=HTTP_201_CREATED)
-            return response
-
-        data: OrderedDict = {
-            'error': 'ERROR',
-            'msg': serializer.errors
-        }
-        response: Response = Response(data, HTTP_400_BAD_REQUEST)
-        return response
+    #     data: OrderedDict = {
+    #         'error': 'ERROR',
+    #         'msg': serializer.errors
+    #     }
+    #     response: Response = Response(data, HTTP_400_BAD_REQUEST)
+    #     return response
 
     def partial_update(self: Self, request: Request, pk: str = None):
 
         req_data: OrderedDict = request.data
         mdl: Model = self.get_object(pk)
-
-        if 'name' in req_data.keys():
-            names = self.model.objects.values_list('name', flat=True)
-            search: str = req_data.get('name')
-
-            if (search in names) and (str(mdl.id) != pk):
-                data: OrderedDict = {
-                    'error': 'ERROR',
-                    'msg': 'El nombre de la sucursal ya existe'
-                }
-                response: Response = Response(data, HTTP_400_BAD_REQUEST)
-                return response
-
         serializer: ModelSerializer = self.get_serializer(mdl, data=req_data, partial=True)
 
         if serializer.is_valid():

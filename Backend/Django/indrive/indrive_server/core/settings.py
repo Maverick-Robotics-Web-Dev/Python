@@ -46,7 +46,8 @@ BASE_APPS = [
 
 LOCAL_APPS = [
     'apps.users',
-    'apps.authentication'
+    'apps.authentication',
+    'apps.roles'
 ]
 
 THIRD_APPS = [

@@ -18,9 +18,7 @@ class ModelCustomSerializer(ModelSerializer):
 
     def create(self: Self, validated_data: OrderedDict) -> Model:
         model: Model = self.get_model()
-        encode_password = validated_data.pop('password')
-        hashed_password: str = encrypt_data(encode_password)
-        validated_data.update({'password': hashed_password, 'status': True, 'create_at': local_datetime()})
+        validated_data.update({'status': True, 'create_at': local_datetime()})
         raise_errors_on_nested_writes('create', self, validated_data)
         instance: Model = model._default_manager.create(**validated_data)
 

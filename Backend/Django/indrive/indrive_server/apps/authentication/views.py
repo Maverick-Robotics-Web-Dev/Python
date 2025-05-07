@@ -1,13 +1,9 @@
 from typing import Self
 from collections import OrderedDict
 
-from django.db.models import Model
-from django.db.models.query import QuerySet
-
 from rest_framework.serializers import ModelSerializer
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.exceptions import ValidationError
 from rest_framework.decorators import action
 from rest_framework.status import (
     HTTP_200_OK,
@@ -17,17 +13,47 @@ from rest_framework.status import (
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from users.models import UserModel
+from apps.users.models import UserModel
 from apps.users.serializer import UserSerializer
 from customs.views.custom_view import CustomViewSet
 from tools.methods.encrypt_data import (encrypt_data, check_encrypted_data)
 
 
 class AuthViewSet(CustomViewSet):
+
     model: UserModel = UserModel
+    serializers: OrderedDict = {
+        'default': UserSerializer,
+    }
 
     @action(methods=['POST'], detail=False)
-    def login(self: Self, request: Request):
+    def sign_up(self: Self, request: Request):
+        req_data: OrderedDict = request.data
+        encode_password = req_data.pop('password')
+        hashed_password: str = encrypt_data(encode_password)
+        req_data.update({'password': hashed_password})
+
+        serializer: ModelSerializer = self.get_serializer(data=req_data)
+
+        if serializer.is_valid():
+            serializer.save()
+            data: OrderedDict = {
+                'ok': 'OK',
+                'msg': 'Creado Exitosamente',
+                'data': serializer.data
+            }
+            response: Response = Response(data=data, status=HTTP_201_CREATED)
+            return response
+
+        data: OrderedDict = {
+            'error': 'ERROR',
+            'msg': serializer.errors
+        }
+        response: Response = Response(data, HTTP_400_BAD_REQUEST)
+        return response
+
+    @action(methods=['POST'], detail=False)
+    def sign_in(self: Self, request: Request):
         email: str = request.data.get('email')
         password: str = request.data.get('password')
 
