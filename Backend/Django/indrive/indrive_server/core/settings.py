@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from unipath import Path
 from locale import setlocale, LC_ALL
+from datetime import timedelta
 
 from tools.methods.core import get_env_file
 
@@ -29,7 +30,7 @@ SECRET_KEY = get_env_file('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.100.85']
+ALLOWED_HOSTS = ['192.168.100.85', 'localhost']
 
 
 # Application definition
@@ -43,7 +44,10 @@ BASE_APPS = [
     'django.contrib.staticfiles',
 ]
 
-LOCAL_APPS = ['models.users']
+LOCAL_APPS = [
+    'apps.users',
+    'apps.authentication'
+]
 
 THIRD_APPS = [
     'rest_framework',
@@ -140,10 +144,21 @@ CORS_ORIGIN_WHITELIST = [
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework_simplejwt.authentication.JWTAuthentication'],
     'DATETIME_FORMAT': '%B %d, %Y - %H:%M:%S',
     'DATETIME_INPUT_FORMATS': ['%B %d, %Y - %H:%M:%S', '%d-%m-%Y - %H:%M:%S'],
     'DATE_FORMAT': '%B %d, %Y',
     'DATE_INPUT_FORMATS': ['%B %d, %Y', '%d-%m-%Y'],
     'TIME_FORMAT': '%H:%M:%S',
-    'TIME_INPUT_FORMATS': ['%H:%M:%S'],
+    'TIME_INPUT_FORMATS': ['%H:%M:%S']
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ALGORITHM': "HS256",
+    'SIGNING_KEY': SECRET_KEY,
+    'AUTH_HEADER_TYPES': ['Bearer']
 }

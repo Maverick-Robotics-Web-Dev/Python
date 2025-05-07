@@ -8,21 +8,20 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
-from rest_framework.decorators import action
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
     HTTP_204_NO_CONTENT,
-    HTTP_400_BAD_REQUEST
+    HTTP_400_BAD_REQUEST,
 )
 
-from models.users.models import UserModel
-from models.users.serializer import UserSerializer
+from apps.users.models import UserModel
+from apps.users.serializer import UserSerializer
 from customs.views.custom_view import CustomViewSet
 
 
 class UserViewSet(CustomViewSet):
-    model: Model = UserModel
+    model: UserModel = UserModel
     serializers: OrderedDict = {
         'default': UserSerializer,
         'list': UserSerializer,
@@ -197,21 +196,3 @@ class UserViewSet(CustomViewSet):
         response = Response(data, HTTP_400_BAD_REQUEST)
 
         return response
-
-    @action(methods=['POST'], detail=False)
-    def login(self: Self, request: Request):
-        email: str = request.data.get('email')
-        password: str = request.data.get('password')
-
-        if not email or not password:
-            data = {
-                'error': 'ERROR',
-                'msg': 'El email y password son obligatorios'
-            }
-            response: Response = Response(data=data, status=HTTP_400_BAD_REQUEST)
-
-            return response
-
-        try:
-            user = self.model.objects.get(email=email, status=True)
-        except

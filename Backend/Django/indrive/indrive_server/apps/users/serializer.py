@@ -1,6 +1,6 @@
 from django.db.models import Model
 
-from models.users.models import UserModel
+from apps.users.models import UserModel
 from customs.serializers.model_custom_serializer import ModelCustomSerializer
 
 
