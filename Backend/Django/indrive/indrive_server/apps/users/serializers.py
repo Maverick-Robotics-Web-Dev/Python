@@ -6,12 +6,13 @@ from customs.serializers.model_custom_serializer import ModelCustomSerializer
 
 class UserSerializer(ModelCustomSerializer):
     class Meta:
-        model: Model = UserModel
-        fields: str | list = '__all__'
+        model: UserModel = UserModel
+        # fields: str | list = '__all__'
+        exclude: tuple | list = ['role']
         extra_kwargs = {
             'password': {'write_only': True},
             'status': {'write_only': True},
             'status_description': {'write_only': True},
             'create_at': {'write_only': True},
-            'update_at': {'write_only': True}
+            'update_at': {'write_only': True},
         }

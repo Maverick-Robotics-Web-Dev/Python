@@ -16,7 +16,7 @@ from rest_framework.status import (
 )
 
 from apps.users.models import UserModel
-from apps.users.serializer import UserSerializer
+from apps.users.serializers import UserSerializer
 from customs.views.custom_view import CustomViewSet
 
 

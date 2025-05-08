@@ -4,7 +4,7 @@ from django.db.models import (Model, AutoField, ForeignKey, CharField, EmailFiel
 from models.abstract.nested_model import NestedModel
 
 
-class UserHasRoles(Model):
+class UserHasRolesModel(Model):
     id_user: ForeignKey = ForeignKey(to='users.UserModel', on_delete=CASCADE, db_column='id_user')
     id_role: ForeignKey = ForeignKey(to='roles.RoleModel', on_delete=CASCADE, db_column='id_role')
 
@@ -22,7 +22,7 @@ class UserModel(NestedModel):
     image: CharField = CharField(verbose_name='Imagen', max_length=256, null=True, blank=False)
     password: CharField = CharField(verbose_name='Contraseña', max_length=256)
     notification_token: CharField = CharField(verbose_name='Token de Notificación', max_length=256, null=True)
-    role = ManyToManyField('roles.RoleModel', through='users.UserHasRoles', related_name='USERS')
+    role = ManyToManyField('roles.RoleModel', through='users.UserHasRolesModel', related_name='USERS')
 
     class Meta:
 

@@ -1,6 +1,7 @@
 from typing import Self
 from collections import OrderedDict
 
+from django.shortcuts import get_object_or_404
 from rest_framework.serializers import ModelSerializer
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -13,10 +14,13 @@ from rest_framework.status import (
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.users.models import UserModel
-from apps.users.serializer import UserSerializer
+from apps.roles.models import RoleModel
+from apps.roles.serializers import RoleSerializer
+from apps.users.models import UserHasRolesModel, UserModel
+from apps.users.serializers import UserSerializer
 from customs.views.custom_view import CustomViewSet
 from tools.methods.encrypt_data import (encrypt_data, check_encrypted_data)
+from tools.methods.get_error import get_error_message
 
 
 class AuthViewSet(CustomViewSet):
@@ -29,25 +33,30 @@ class AuthViewSet(CustomViewSet):
     @action(methods=['POST'], detail=False)
     def sign_up(self: Self, request: Request):
         req_data: OrderedDict = request.data
-        encode_password = req_data.pop('password')
-        hashed_password: str = encrypt_data(encode_password)
-        req_data.update({'password': hashed_password})
+
+        if req_data.get('password'):
+            hashed_password: str = encrypt_data(req_data.pop('password'))
+            req_data.update({'password': hashed_password})
 
         serializer: ModelSerializer = self.get_serializer(data=req_data)
 
         if serializer.is_valid():
-            serializer.save()
+            user = serializer.save()
+            client_role = get_object_or_404(RoleModel, id='CLIENT')
+            UserHasRolesModel._default_manager.create(id_user=user, id_role=client_role)
+            roles = RoleModel._default_manager.filter(userhasrolesmodel__id_user=user)
+            roles_serializer = RoleSerializer(roles, many=True)
             data: OrderedDict = {
                 'ok': 'OK',
                 'msg': 'Creado Exitosamente',
-                'data': serializer.data
+                'data': {**serializer.data,  'roles': roles_serializer.data}
             }
             response: Response = Response(data=data, status=HTTP_201_CREATED)
             return response
 
         data: OrderedDict = {
             'error': 'ERROR',
-            'msg': serializer.errors
+            'msg': get_error_message(serializer.errors.items())
         }
         response: Response = Response(data, HTTP_400_BAD_REQUEST)
         return response
