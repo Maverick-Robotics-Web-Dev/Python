@@ -4,14 +4,15 @@ from collections import OrderedDict
 from django.db.models import Model
 from django.db.models.query import QuerySet
 
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.serializers import ModelSerializer
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.exceptions import ValidationError
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
     HTTP_204_NO_CONTENT,
+    HTTP_404_NOT_FOUND,
     HTTP_400_BAD_REQUEST,
 )
 
@@ -22,6 +23,7 @@ from customs.views.custom_view import CustomViewSet
 
 class UserViewSet(CustomViewSet):
     model: UserModel = UserModel
+    permission_classes = [IsAuthenticated]
     serializers: OrderedDict = {
         'default': UserSerializer,
         'list': UserSerializer,
@@ -46,7 +48,7 @@ class UserViewSet(CustomViewSet):
                 'msg': 'No existen coincidencias'
             }
 
-            response: ValidationError = ValidationError(data, HTTP_204_NO_CONTENT)
+            response: Response = Response(data, HTTP_404_NOT_FOUND)
 
             raise response
 
@@ -124,8 +126,8 @@ class UserViewSet(CustomViewSet):
 
     def partial_update(self: Self, request: Request, pk: str = None):
 
-        req_data: OrderedDict = request.data
         mdl: Model = self.get_object(pk)
+        req_data: OrderedDict = request.data
         serializer: ModelSerializer = self.get_serializer(mdl, data=req_data, partial=True)
 
         if serializer.is_valid():

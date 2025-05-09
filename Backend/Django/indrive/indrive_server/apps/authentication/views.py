@@ -88,6 +88,8 @@ class AuthViewSet(CustomViewSet):
         if check_encrypted_data(password.encode('utf-8'), user.password.encode('utf-8')):
             jw_token: RefreshToken = RefreshToken.for_user(user=user)
             access_token: str = str(jw_token.access_token)
+            roles = RoleModel._default_manager.filter(userhasrolesmodel__id_user=user)
+            roles_serializer = RoleSerializer(roles, many=True)
             data: OrderedDict = {
                 'user': {
                     'id': user.id,
@@ -96,7 +98,8 @@ class AuthViewSet(CustomViewSet):
                     'email': user.email,
                     'phone': user.phone,
                     'image': user.image,
-                    'notification_token': user.notification_token
+                    'notification_token': user.notification_token,
+                    'roles': roles_serializer.data
                 },
                 'auth': {
                     'token': 'Bearer ' + access_token

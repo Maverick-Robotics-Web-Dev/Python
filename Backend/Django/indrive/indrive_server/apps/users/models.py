@@ -1,5 +1,5 @@
 from typing import Self, LiteralString
-from django.db.models import (Model, AutoField, ForeignKey, CharField, EmailField, ManyToManyField, CASCADE)
+from django.db.models import (Model, AutoField, ForeignKey, CharField, EmailField, ImageField, ManyToManyField, CASCADE)
 
 from models.abstract.nested_model import NestedModel
 
@@ -19,7 +19,7 @@ class UserModel(NestedModel):
     lastname: CharField = CharField(verbose_name='Apellido', max_length=256)
     email: EmailField = EmailField(verbose_name='Email', unique=True)
     phone: CharField = CharField(verbose_name='Teléfono', max_length=20)
-    image: CharField = CharField(verbose_name='Imagen', max_length=256, null=True, blank=False)
+    image: ImageField = ImageField('Imagen', upload_to='users/', default='default.jpg')
     password: CharField = CharField(verbose_name='Contraseña', max_length=256)
     notification_token: CharField = CharField(verbose_name='Token de Notificación', max_length=256, null=True)
     role = ManyToManyField('roles.RoleModel', through='users.UserHasRolesModel', related_name='USERS')

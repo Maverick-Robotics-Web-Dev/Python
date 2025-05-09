@@ -52,6 +52,7 @@ LOCAL_APPS = [
 
 THIRD_APPS = [
     'rest_framework',
+    'rest_framework_simplejwt',
     'drf_yasg',  # To document the application
     'corsheaders'
 ]
@@ -146,6 +147,7 @@ CORS_ORIGIN_WHITELIST = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework_simplejwt.authentication.JWTAuthentication'],
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
     'DATETIME_FORMAT': '%B %d, %Y - %H:%M:%S',
     'DATETIME_INPUT_FORMATS': ['%B %d, %Y - %H:%M:%S', '%d-%m-%Y - %H:%M:%S'],
     'DATE_FORMAT': '%B %d, %Y',
