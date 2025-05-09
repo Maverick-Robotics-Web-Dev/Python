@@ -21,6 +21,7 @@ from apps.users.serializers import UserSerializer
 from customs.views.custom_view import CustomViewSet
 from tools.methods.encrypt_data import (encrypt_data, check_encrypted_data)
 from tools.methods.get_error import get_error_message
+from tools.methods.create_relations import create_many_to_many_relation
 
 
 class AuthViewSet(CustomViewSet):
@@ -42,14 +43,11 @@ class AuthViewSet(CustomViewSet):
 
         if serializer.is_valid():
             user = serializer.save()
-            client_role = get_object_or_404(RoleModel, id='CLIENT')
-            UserHasRolesModel._default_manager.create(id_user=user, id_role=client_role)
-            roles = RoleModel._default_manager.filter(userhasrolesmodel__id_user=user)
-            roles_serializer = RoleSerializer(roles, many=True)
+            client_role = create_many_to_many_relation(model_to_get=RoleModel, many_to_many_model=UserHasRolesModel, model_created=user, serializer_model_to_get=RoleSerializer, id_model_get='CLIENT',  column_name='id_user', col_name='id_role')
             data: OrderedDict = {
                 'ok': 'OK',
                 'msg': 'Creado Exitosamente',
-                'data': {**serializer.data,  'roles': roles_serializer.data}
+                'data': {**serializer.data,  'roles': client_role}
             }
             response: Response = Response(data=data, status=HTTP_201_CREATED)
             return response

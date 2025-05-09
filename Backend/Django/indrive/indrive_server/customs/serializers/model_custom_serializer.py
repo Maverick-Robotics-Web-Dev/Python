@@ -7,7 +7,6 @@ from rest_framework.serializers import (ModelSerializer, raise_errors_on_nested_
 from rest_framework.utils import model_meta
 
 from tools.methods.datetime import local_datetime
-from tools.methods.encrypt_data import encrypt_data
 
 
 class ModelCustomSerializer(ModelSerializer):
