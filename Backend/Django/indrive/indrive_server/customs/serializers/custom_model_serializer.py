@@ -9,7 +9,7 @@ from rest_framework.utils import model_meta
 from tools.methods.datetime import local_datetime
 
 
-class ModelCustomSerializer(ModelSerializer):
+class CustomModelSerializer(ModelSerializer):
 
     def get_model(self: Self) -> Model:
         model: Model = self.Meta.model

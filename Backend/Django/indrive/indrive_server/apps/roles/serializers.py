@@ -1,8 +1,8 @@
 from apps.roles.models import RoleModel
-from customs.serializers.model_custom_serializer import ModelCustomSerializer
+from customs.serializers.custom_model_serializer import CustomModelSerializer
 
 
-class RoleSerializer(ModelCustomSerializer):
+class RoleSerializer(CustomModelSerializer):
     class Meta:
         model: RoleModel = RoleModel
         fields: str | list = '__all__'

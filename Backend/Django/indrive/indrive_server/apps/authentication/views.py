@@ -1,7 +1,9 @@
 from typing import Self
 from collections import OrderedDict
 
-from django.shortcuts import get_object_or_404
+from django.db.models import Model
+
+from rest_framework.permissions import AllowAny
 from rest_framework.serializers import ModelSerializer
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -27,9 +29,17 @@ from tools.methods.create_relations import create_many_to_many_relation
 class AuthViewSet(CustomViewSet):
 
     model: UserModel = UserModel
+    permission_classes = [AllowAny]
     serializers: OrderedDict = {
         'default': UserSerializer,
     }
+
+    def custom_token_for_user(self: Self, user: Model):
+        refresh_token: RefreshToken = RefreshToken.for_user(user)
+        refresh_token.payload.pop('user_id')
+        refresh_token.payload.update({'id': user.id, 'name': user.name})
+
+        return refresh_token
 
     @action(methods=['POST'], detail=False)
     def sign_up(self: Self, request: Request):
@@ -75,6 +85,7 @@ class AuthViewSet(CustomViewSet):
 
         try:
             user: UserModel = self.model.objects.get(email=email, status=True)
+            serializer = self.get_serializer(data=user)
 
         except self.model.DoesNotExist:
             data = {
@@ -85,8 +96,8 @@ class AuthViewSet(CustomViewSet):
 
             return response
 
-        if check_encrypted_data(password.encode('utf-8'), user.password.encode('utf-8')):
-            jw_token: RefreshToken = RefreshToken.for_user(user=user)
+        if check_encrypted_data(password.encode(), user.password.encode()):
+            jw_token: RefreshToken = self.custom_token_for_user(user)
             access_token: str = str(jw_token.access_token)
             roles = RoleModel._default_manager.filter(userhasrolesmodel__id_user=user)
             roles_serializer = RoleSerializer(roles, many=True)
@@ -97,7 +108,7 @@ class AuthViewSet(CustomViewSet):
                     'lastname': user.lastname,
                     'email': user.email,
                     'phone': user.phone,
-                    'image': user.image,
+                    'image': request.build_absolute_uri(user.image.url),
                     'notification_token': user.notification_token,
                     'roles': roles_serializer.data
                 },

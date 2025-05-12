@@ -1,10 +1,10 @@
 from django.db.models import Model
 
 from apps.users.models import UserModel
-from customs.serializers.model_custom_serializer import ModelCustomSerializer
+from customs.serializers.custom_model_serializer import CustomModelSerializer
 
 
-class UserSerializer(ModelCustomSerializer):
+class UserSerializer(CustomModelSerializer):
     class Meta:
         model: UserModel = UserModel
         # fields: str | list = '__all__'
