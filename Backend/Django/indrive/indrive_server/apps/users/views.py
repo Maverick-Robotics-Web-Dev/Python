@@ -11,11 +11,13 @@ from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
-    HTTP_204_NO_CONTENT,
     HTTP_404_NOT_FOUND,
     HTTP_400_BAD_REQUEST,
+    HTTP_403_FORBIDDEN
 )
 
+from apps.roles.models import RoleModel
+from apps.roles.serializers import RoleSerializer
 from apps.users.models import UserModel
 from apps.users.serializers import UserSerializer
 from customs.views.custom_view import CustomViewSet
@@ -92,10 +94,12 @@ class UserViewSet(CustomViewSet):
 
         mdl: Model = self.get_object(pk)
         serializer: ModelSerializer = self.get_serializer(mdl)
+        roles = RoleModel._default_manager.filter(userhasrolesmodel__id_user=mdl)
+        roles_serializer = RoleSerializer(roles, many=True)
 
         data: OrderedDict = {
             'ok': 'OK',
-            'data': serializer.data
+            'data': {**serializer.data, 'roles': roles_serializer.data}
         }
 
         response: Response = Response(data, HTTP_200_OK)
@@ -126,16 +130,28 @@ class UserViewSet(CustomViewSet):
 
     def partial_update(self: Self, request: Request, pk: str = None):
 
-        mdl: Model = self.get_object(pk)
         req_data: OrderedDict = request.data
+
+        if str(request.user.id) != pk:
+            data: OrderedDict = {
+                'error': 'ERROR',
+                'msg': 'No tienes permiso para actualizar este usuario'
+            }
+            response: Response = Response(data, HTTP_403_FORBIDDEN)
+
+            return response
+
+        mdl: Model = self.get_object(pk)
         serializer: ModelSerializer = self.get_serializer(mdl, data=req_data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
+            roles = RoleModel._default_manager.filter(userhasrolesmodel__id_user=mdl)
+            roles_serializer = RoleSerializer(roles, many=True)
             data: OrderedDict = {
                 'ok': 'OK',
                 'msg': 'Actualizado Exitosamente',
-                'data': serializer.data
+                'data': {**serializer.data, 'roles': roles_serializer.data}
             }
             response: Response = Response(data, HTTP_201_CREATED)
 
