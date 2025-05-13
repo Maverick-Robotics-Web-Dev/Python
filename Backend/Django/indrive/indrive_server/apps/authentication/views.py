@@ -12,7 +12,8 @@ from rest_framework.status import (
     HTTP_200_OK,
     HTTP_201_CREATED,
     HTTP_400_BAD_REQUEST,
-    HTTP_401_UNAUTHORIZED
+    HTTP_401_UNAUTHORIZED,
+    HTTP_403_FORBIDDEN,
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -125,6 +126,6 @@ class AuthViewSet(CustomViewSet):
                 'error': 'ERROR',
                 'msg': 'Contraseña Incorrecta'
             }
-            response: Response = Response(data=data, status=HTTP_401_UNAUTHORIZED)
+            response: Response = Response(data=data, status=HTTP_403_FORBIDDEN)
 
             return response
