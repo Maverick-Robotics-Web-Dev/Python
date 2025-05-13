@@ -60,7 +60,7 @@ class UserViewSet(CustomViewSet):
 
         if query_res is None:
             mdl: Model = self.model
-            response: Model = mdl.objects.filter(status=True).order_by('name')
+            response: Model = mdl.objects.filter(status=True)
 
             return response
 
