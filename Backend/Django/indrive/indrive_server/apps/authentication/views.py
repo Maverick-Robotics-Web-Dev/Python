@@ -86,7 +86,6 @@ class AuthViewSet(CustomViewSet):
 
         try:
             user: UserModel = self.model.objects.get(email=email, status=True)
-            serializer = self.get_serializer(data=user)
 
         except self.model.DoesNotExist:
             data = {
