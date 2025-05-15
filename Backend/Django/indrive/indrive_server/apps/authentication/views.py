@@ -17,6 +17,7 @@ from rest_framework.status import (
 )
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from apps.authentication.serializers import AuthSerializer
 from apps.roles.models import RoleModel
 from apps.roles.serializers import RoleSerializer
 from apps.users.models import UserHasRolesModel, UserModel
@@ -33,6 +34,7 @@ class AuthViewSet(CustomViewSet):
     permission_classes = [AllowAny]
     serializers: OrderedDict = {
         'default': UserSerializer,
+        'sign_in': AuthSerializer
     }
 
     def custom_token_for_user(self: Self, user: Model):
@@ -72,8 +74,8 @@ class AuthViewSet(CustomViewSet):
 
     @action(methods=['POST'], detail=False)
     def sign_in(self: Self, request: Request):
-        email: str = request.data.get('email')
-        password: str = request.data.get('password')
+        email = request.data.get('email')
+        password = request.data.get('password')
 
         if not email or not password:
             data: OrderedDict = {
@@ -84,8 +86,19 @@ class AuthViewSet(CustomViewSet):
 
             return response
 
+        serializer: AuthSerializer = self.get_serializer(data=request.data)
+
+        if not serializer.is_valid():
+            data: OrderedDict = {
+                'error': 'ERROR',
+                'msg': get_error_message(serializer.errors.items())
+            }
+            response: Response = Response(data=data, status=HTTP_400_BAD_REQUEST)
+
+            return response
+
         try:
-            user: UserModel = self.model.objects.get(email=email, status=True)
+            user: UserModel = self.model._default_manager.get(email=email, status=True)
 
         except self.model.DoesNotExist:
             data = {

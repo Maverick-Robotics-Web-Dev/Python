@@ -4,7 +4,7 @@ from collections import OrderedDict
 from django.db.models import Model
 from django.db.models.query import QuerySet
 
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.serializers import ModelSerializer
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -25,7 +25,7 @@ from customs.views.custom_view import CustomViewSet
 
 class UserViewSet(CustomViewSet):
     model: UserModel = UserModel
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializers: OrderedDict = {
         'default': UserSerializer,
         'list': UserSerializer,

@@ -1,5 +1,3 @@
-from django.db.models import Model
-
 from apps.users.models import UserModel
 from customs.serializers.custom_model_serializer import CustomModelSerializer
 
