@@ -80,10 +80,16 @@ class UserViewSet(CustomViewSet):
             return response
 
         serializer: ModelSerializer = self.get_serializer(query_res, many=True)
+        users: list = []
+
+        for user in serializer.data:
+            roles = RoleModel._default_manager.filter(userhasrolesmodel__id_user=user['id'])
+            roles_serializer = RoleSerializer(roles, many=True)
+            users.append({**user, 'roles': roles_serializer.data})
 
         data: OrderedDict = {
             'ok': 'OK',
-            'data': serializer.data,
+            'data': users,
         }
 
         response: Response = Response(data, HTTP_200_OK)

@@ -71,6 +71,7 @@ class AuthViewSet(CustomViewSet):
             'msg': get_error_message(serializer.errors.items())
         }
         response: Response = Response(data, HTTP_400_BAD_REQUEST)
+
         return response
 
     @action(methods=['POST'], detail=False)
@@ -124,11 +125,9 @@ class AuthViewSet(CustomViewSet):
                     'phone': user.phone,
                     'image': request.build_absolute_uri(user.image.url),
                     'notification_token': user.notification_token,
-                    'roles': roles_serializer.data
+                    'roles': roles_serializer.data,
                 },
-                'auth': {
-                    'token': 'Bearer ' + access_token
-                }
+                'token': 'Bearer ' + access_token
             }
             response: Response = Response(data=data, status=HTTP_200_OK)
 
