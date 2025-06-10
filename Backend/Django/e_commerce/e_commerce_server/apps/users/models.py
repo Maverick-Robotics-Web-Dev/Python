@@ -19,7 +19,7 @@ class UserModel(NestedModel):
     lastname: CharField = CharField(verbose_name='Apellido', max_length=256)
     email: EmailField = EmailField(verbose_name='Email', unique=True)
     phone: CharField = CharField(verbose_name='Teléfono', max_length=20)
-    image: ImageField = ImageField('Imagen', upload_to='users/', default='default.jpg')
+    image: ImageField = ImageField('Imagen', upload_to='users/', default='default.jpg', null=True)
     password: CharField = CharField(verbose_name='Contraseña', max_length=256)
     notification_token: CharField = CharField(verbose_name='Token de Notificación', max_length=256, null=True)
     role = ManyToManyField('roles.RoleModel', through='users.UserHasRolesModel', related_name='USERS')
