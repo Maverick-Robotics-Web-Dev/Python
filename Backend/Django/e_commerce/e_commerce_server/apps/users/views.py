@@ -25,7 +25,7 @@ from apps.roles.serializers import RoleSerializer
 
 class UserViewSet(CustomViewSet):
     model: UserModel = UserModel
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializers: OrderedDict = {
         'default': UserSerializer,
         'list': UserSerializer,
@@ -137,6 +137,9 @@ class UserViewSet(CustomViewSet):
     def partial_update(self: Self, request: Request, pk: str = None):
 
         req_data: OrderedDict = request.data
+        print(f'Request: {request.user}')
+        print(f'Request ID: {request.user.id}')
+        print(f'Id: {pk}')
 
         if str(request.user.id) != pk:
             data: OrderedDict = {
