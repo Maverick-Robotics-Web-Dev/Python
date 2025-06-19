@@ -137,7 +137,7 @@ class UserViewSet(CustomViewSet):
     def partial_update(self: Self, request: Request, pk: str = None):
 
         req_data: OrderedDict = request.data
-        print(f'Request: {request.user}')
+        print(f'Request: {request.data}')
         print(f'Request ID: {request.user.id}')
         print(f'Id: {pk}')
 
