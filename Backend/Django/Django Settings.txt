@@ -6,6 +6,7 @@ python -m virtualenv (name of the enviroment)
 
 Linux: ./(name of folder of the virtual enviroment)/Scripts/activate
 Windows: .\(name of folder of the virtual enviroment)\Scripts\activate
+Windows Terminal bash: source markone/Scripts/activate
 
 3.-Install Django Framework with the next cmd
 
