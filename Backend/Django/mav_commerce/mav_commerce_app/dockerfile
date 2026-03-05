@@ -1,0 +1,15 @@
+FROM python:3.14
+# Install SSH client
+RUN apt-get update && apt-get install -y openssh-client
+# Set enviroment variables
+ENV PYTHONUNBUFFERED 1
+# Set working directory
+WORKDIR /app
+# Copy requirements.txt file
+COPY requirements.txt /app/requirements.txt
+# Install dependencies
+RUN pip install -r requirements.txt
+# Copy the app to the working directory
+COPY . /app
+# Start the SSH tunnel
+CMD python manage.py runserver 0.0.0.0:8000
