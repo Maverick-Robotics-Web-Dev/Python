@@ -2,6 +2,8 @@ Backend/Django/wass_crm/wass/core/core_env_v.json
 Backend/Django/indrive/indrive_server/core/core_env.json
 Backend/Django/e_commerce/e_commerce_server/core/core_env.json
 Backend/Django/e_commerce/e_commerce_server/.vscode/
+Backend/Django/
+Backend/Django/mav_commerce/mav_commerce_app/mav_commerce_app/.env
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

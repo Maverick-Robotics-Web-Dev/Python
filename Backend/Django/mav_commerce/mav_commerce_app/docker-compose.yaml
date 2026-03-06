@@ -28,6 +28,6 @@ services:
       MYSQL_USER: maverick
       MYSQL_PASSWORD: mav7690
     ports:
-      - 3306:3306
+      - 3308:3306
     volumes:
-      - .dbdata:/var/lib/mysql
+      - .db_data:/var/lib/mysql
