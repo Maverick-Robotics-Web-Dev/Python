@@ -85,8 +85,12 @@ ASGI_APPLICATION = 'mav_commerce_app.asgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'HOST': 'django_db',
+        'PORT': 3306,
+        'USER': 'maverick',
+        'PASSWORD': 'mav7690',
+        'NAME': 'mav_commerce_db',
     }
 }
 

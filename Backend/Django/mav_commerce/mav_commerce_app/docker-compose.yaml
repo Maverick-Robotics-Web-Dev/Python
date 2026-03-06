@@ -17,3 +17,17 @@ services:
     container_name: django_redis
     ports:
       - 6379:6379
+
+  django_db:
+    image: mysql:latest
+    container_name: django_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mav7690
+      MYSQL_DATABASE: mav_commerce_db
+      MYSQL_USER: maverick
+      MYSQL_PASSWORD: mav7690
+    ports:
+      - 3306:3306
+    volumes:
+      - .dbdata:/var/lib/mysql
